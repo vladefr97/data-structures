@@ -32,6 +32,7 @@ public class IncreasingIterator implements Iterator<Integer> {
         return curr < valueLimit && step < stepLimit;
     }
 
+
     @Override
     public Integer next() {
         int prev = curr;

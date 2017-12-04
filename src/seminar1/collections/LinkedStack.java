@@ -10,12 +10,22 @@ public class LinkedStack<Item> implements IStack<Item> {
     @Override
     public void push(Item item) {
         /* TODO: implement it */
+        Node<Item> n = new Node<Item>(item, head);
+
+        head = n;
+        size++;
     }
 
     @Override
     public Item pop() {
+        if (size == 0) {
+            return null;
+        }
         /* TODO: implement it */
-        return null;
+        Item i = head.item;
+        head = head.next;
+        size--;
+        return i;
     }
 
     @Override
@@ -38,13 +48,18 @@ public class LinkedStack<Item> implements IStack<Item> {
         @Override
         public boolean hasNext() {
             /* TODO: implement it */
-            return false;
+            if (head.next == null) {
+                return false;
+            } else {
+                return true;
+            }
+            //return false;
         }
 
         @Override
         public Item next() {
             /* TODO: implement it */
-            return null;
+            return head.next.item;
         }
 
     }
