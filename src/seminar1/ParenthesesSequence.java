@@ -28,7 +28,9 @@ public class ParenthesesSequence {
                 check++;
             }
             if (sequence.charAt(i) == ')') {
+
                 check--;
+                if(check < 0) return false;
             }
         }
         if (check == 0) {

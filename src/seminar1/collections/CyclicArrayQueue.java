@@ -1,6 +1,7 @@
 package seminar1.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 public class CyclicArrayQueue<Item> implements IQueue<Item> {
@@ -17,6 +18,14 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
         front = maxSize - 1;
         rear = maxSize - 1;
         elementData = (Item[]) new Object[maxSize];
+
+    }
+
+    public CyclicArrayQueue() {
+        front = maxSize - 1;
+        rear = maxSize - 1;
+        elementData = (Item[]) new Object[maxSize];
+
 
     }
 
@@ -107,7 +116,7 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
                 newArray[i] = elementData[index];
                 index--;
             }
-            front = index + 1;
+            front = i;
             rear = newArray.length - 1;
 
         }
@@ -155,26 +164,22 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
 
     }
 
+
     @Override
     public Iterator<Item> iterator() {
         /* TODO: implement it */
         return new Iterator<Item>() {
+            private int currElement = rear;
             @Override
             public boolean hasNext() {
-                return elemCount != 1;
+               return currElement != front;
             }
 
             @Override
             public Item next() {
-                if (elemCount <= 1) {
-                    return null;
-                } else {
-                    if (rear == 0) {
-                        return elementData[maxSize - 1];
-                    } else {
-                        return elementData[rear - 1];
-                    }
-                }
+                if (currElement == front - 1) throw new NoSuchElementException();
+
+                return elementData[currElement--];
 
             }
         };

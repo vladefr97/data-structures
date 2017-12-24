@@ -1,5 +1,7 @@
 package seminar1;
 
+import seminar1.collections.LinkedStack;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,33 +28,35 @@ public class ParenthesesSequenceExt {
     // sequence = "()()" | "(({}[]))[[[" | "{}" | ...
     private static boolean isBalanced(String sequence) {
         /* TODO: implement it */
-        int roundBraket = 0;
-        int squareBraket = 0;
-        int figureBraket = 0;
+        LinkedStack<Character> linkedStack = new LinkedStack<>();
         int n = sequence.length();
+        char ch;
         for (int i = 0; i < n; i++) {
-            if (sequence.charAt(i) == LEFT_PAREN) {
-                roundBraket++;
-            }
-            if (sequence.charAt(i) == RIGHT_PAREN) {
-                roundBraket--;
-            }
-            if (sequence.charAt(i) == LEFT_BRACE) {
-                figureBraket++;
-            }
-            if (sequence.charAt(i) == RIGHT_BRACE) {
-                figureBraket--;
-            }
-            if (sequence.charAt(i) == LEFT_BRACKET) {
-                squareBraket++;
-            }
-            if (sequence.charAt(i) == RIGHT_BRACKET) {
-                squareBraket--;
+            ch = sequence.charAt(i);
+            switch (ch){
+                case LEFT_PAREN:
+                    linkedStack.push(ch);
+                    break;
+                case RIGHT_PAREN:
+                    if(linkedStack.isEmpty() || linkedStack.pop() != LEFT_PAREN) return false;
+                    break;
+                case LEFT_BRACE:
+                    linkedStack.push(ch);
+                    break;
+                case RIGHT_BRACE:
+                    if(linkedStack.isEmpty() || linkedStack.pop() != LEFT_BRACE) return false;
+                    break;
+                case LEFT_BRACKET:
+                    linkedStack.push(ch);
+                    break;
+                case RIGHT_BRACKET:
+                    if(linkedStack.isEmpty() || linkedStack.pop() != LEFT_BRACKET) return false;
+                    break;
             }
 
         }
 
-        return (roundBraket == 0 && squareBraket == 0 && figureBraket == 0);
+        return linkedStack.isEmpty();
     }
 
     public static void main(String[] args) {

@@ -1,15 +1,16 @@
 package seminar1;
 
-import seminar1.collections.IQueue;
-import seminar1.collections.IStack;
-import seminar1.collections.LinkedQueue;
-import seminar1.collections.LinkedStack;
-import seminar1.collections.TwoStackQueue;
+import com.sun.corba.se.impl.presentation.rmi.IDLTypeException;
+import seminar1.collections.*;
+import seminar1.iterators.IncreasingIterator;
+import seminar1.iterators.MergingIncreasingIterator;
+
+import java.util.Iterator;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("LinkedStack");
+       /* System.out.println("LinkedStack");
         IStack<Integer> stack = new LinkedStack<>();
         for (int i = 0; i < 20; i++) {
             stack.push(i);
@@ -46,6 +47,46 @@ public class Main {
         }
         for (int i = 0; i < 30; i++) {
             System.out.print(queue.dequeue() + " ");
+        }*/
+
+
+     /*   CyclicArrayQueue<Integer> cyclicArrayQueue = new CyclicArrayQueue<>(10);
+        for (int i = 0; i < 1000; i++) {
+            cyclicArrayQueue.enqueue(i);ц
+        cyclicArrayQueue.size();
+        for (int i = 0; i < 1000; i++) {
+            if (i != cyclicArrayQueue.dequeue()) {
+                System.out.println("i = " + i);
+            }
+        }*/
+       /* LinkedQueue<Integer> queue = new LinkedQueue<>();
+        queue.enqueue(1);
+        queue.enqueue(3);
+        queue.enqueue(4);
+        queue.dequeue();
+        Iterator iterator = queue.iterator();
+        while (iterator.hasNext())
+            System.out.println(iterator.next());*/
+
+       /* ArrayPriorityQueue<Integer> queue = new ArrayPriorityQueue<>();
+        for(int i = 0; i < 1000; i++)
+        {
+            queue.add(i);
         }
+       Iterator iterator = queue.iterator();
+
+       for(int i  = 0 ;i< 10 ;i++)
+            System.out.println(iterator.next());*/
+        IncreasingIterator increasingIterator = new IncreasingIterator(10, 100000000,10);
+
+        IncreasingIterator increasingIterator2 = new IncreasingIterator(10, 100000000,10);
+        System.out.println("-------");
+
+
+
+
+
+
+
     }
 }

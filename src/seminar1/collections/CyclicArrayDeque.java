@@ -1,6 +1,7 @@
 package seminar1.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
@@ -10,7 +11,12 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
     int size = 4;
     int elemCount = 0;
 
+    public int getBack() {
+        return back;
+    }
+
     public CyclicArrayDeque() {
+
         elementData = (Item[]) new Object[(int) size];
         back = front = size / 2;
 
@@ -20,7 +26,29 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
     public void pushFront(Item item) {
 
         /* TODO: implement it */
-        if (front == back && elemCount == 0) {
+        if (front == back) {
+            if (elemCount == 0)
+                elementData[front] = item;
+            else
+                elementData[++front] = item;
+
+            elemCount++;
+            return;
+
+        }
+        if (front + 1 == size) {
+            if (back == 0) grow();
+            else {
+                front = 0;
+                elementData[front] = item;
+                elemCount++;
+                return;
+            }
+        }
+        if (front + 1 == back && elemCount != 0) grow();
+        elementData[++front] = item;
+        elemCount++;
+       /* if (front == back && elemCount == 0) {
             elementData[front] = item;
             elemCount++;
             return;
@@ -30,6 +58,10 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
                 grow();
             } else {
                 front = 0;
+                elementData[front] = item;
+                elemCount++;
+                front++;
+                return;
             }
         } else if (front + 1 == back) {
             grow();
@@ -37,12 +69,38 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
         front++;
         elemCount++;
         elementData[front] = item;
+        */
     }
 
     @Override
     public void pushBack(Item item) {
         /* TODO: implement it */
-        if (front == back && elemCount == 0) {
+        if (front == back) {
+            if (elemCount == 0)
+                elementData[back] = item;
+            else
+                elementData[--back] = item;
+
+            elemCount++;
+            return;
+
+        }
+
+        if (back - 1 == -1) {
+            if (front == size - 1) grow();
+
+            back = size - 1;
+            elementData[back] = item;
+            elemCount++;
+            return;
+        }
+        if (back - 1 == front && elemCount != 0) {
+            grow();
+            back = size;
+        }
+        elementData[--back] = item;
+        elemCount++;
+       /* if (front == back && elemCount == 0) {
             elementData[back] = item;
             elemCount++;
             return;
@@ -61,7 +119,7 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
             back--;
         }
         elemCount++;
-        elementData[back] = item;
+        elementData[back] = item;*/
 
     }
 
@@ -168,6 +226,15 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
          * то уменьшить его размер в два раза
          */
         Item[] newArray = (Item[]) new Object[(int) (size / 2)];
+        if (elemCount == 1) {
+            newArray = (Item[]) new Object[4];
+            newArray[0] = elementData[back];
+            elementData = newArray;
+            size = 4;
+            back = front = 0;
+            return;
+
+        }
         int index;
         int i = 0;
         if (front > back) {
@@ -194,29 +261,24 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
         size = elementData.length;
     }
 
+
     @Override
     public Iterator<Item> iterator() {
         /* TODO: implement it */
         return new Iterator<Item>() {
+            private int currElement = back;
+
             @Override
             public boolean hasNext() {
-                return elemCount > 1;
+                return currElement != front + 1;
             }
 
             @Override
             public Item next() {
 
-                if (back < front) {
-                    return elementData[back + 1];
-                } else if (back == front) {
-                    return null;
-                } else {
-                    if (back + 1 != size) {
-                        return elementData[back + 1];
-                    } else {
-                        return elementData[0];
-                    }
-                }
+                if (currElement == front + 1) throw new NoSuchElementException();
+                if (currElement == size) currElement = 0;
+                return elementData[currElement++];
             }
         };
     }

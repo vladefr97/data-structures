@@ -1,6 +1,7 @@
 package seminar1.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class TwoStackQueue<Item> implements IQueue<Item> {
 
@@ -56,7 +57,18 @@ public class TwoStackQueue<Item> implements IQueue<Item> {
     @Override
     public Iterator<Item> iterator() {
         /* TODO: implement it (optional) */
-        return null;
+        return new Iterator<Item>() {
+
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public Item next() {
+                return null;
+            }
+        };
     }
 
 }

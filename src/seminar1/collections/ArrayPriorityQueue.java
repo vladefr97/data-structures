@@ -2,6 +2,7 @@ package seminar1.collections;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorityQueue<Key> {
 
@@ -14,7 +15,14 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
     public ArrayPriorityQueue() {
         /* TODO: implement it — O(n) */
         elementData = (Key[]) new Comparable[arraySize];
+        this.comparator = new Comparator<Key>() {
+            @Override
+            public int compare(Key o1, Key o2) {
+                return o1.compareTo(o2);
+            }
+        };
     }
+
 
     public ArrayPriorityQueue(Comparator<Key> comparator) {
         /* TODO: implement it — O(n) */
@@ -60,6 +68,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         Key minValue = elementData[0];
         if (elemCount == 1) {
             elementData[0] = null;
+            elemCount--;
             return minValue;
         }
         elementData[0] = elementData[elemCount - 1];
@@ -156,9 +165,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
          * то увеличить его размер в полтора раз
          */
         Key[] newArray = (Key[]) new Comparable[(int) (arraySize * 1.5)];
-        for (int i = 0; i < elementData.length; i++) {
-            newArray[i] = elementData[i];
-        }
+        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
         elementData = newArray;
         arraySize = elementData.length;
 
@@ -171,9 +178,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
          * то уменьшить его размер в два раза
          */
         Key[] newArray = (Key[]) new Comparable[(int) (arraySize / 2)];
-        for (int i = 0; i < elemCount; i++) {
-            newArray[i] = elementData[i];
-        }
+        System.arraycopy(elementData, 0, newArray, 0, elemCount);
         elementData = newArray;
         arraySize = elementData.length;
     }
@@ -185,18 +190,21 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
                 ;
     }
 
+    private int currElem = 0;
+
     @Override
     public Iterator<Key> iterator() {
         /* TODO: implement it */
         return new Iterator<Key>() {
             @Override
             public boolean hasNext() {
-                return elemCount != 1;
+                return currElem < elemCount;
             }
 
             @Override
             public Key next() {
-                return elementData[0];
+                if(currElem>=elemCount) throw new NoSuchElementException();
+                return elementData[currElem++];
             }
         };
     }

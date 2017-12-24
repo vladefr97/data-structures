@@ -1,6 +1,7 @@
 package seminar1.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class LinkedDeque<Item> implements IDeque<Item> {
 
@@ -88,14 +89,19 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     public Iterator<Item> iterator() {
         /* TODO: implement it */
         return new Iterator<Item>() {
+            private Node<Item> currElement = tail;
             @Override
             public boolean hasNext() {
-                return head != null;
+
+                return currElement!=null;
             }
 
             @Override
             public Item next() {
-                return tail.next.item;
+                if(currElement == null) throw new NoSuchElementException();
+                Item temp = currElement.item;
+                currElement = currElement.next;
+                return temp;
             }
         };
     }

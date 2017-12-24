@@ -36,43 +36,43 @@ public class SolverExt {
     private static double evaluate(String[] values) {
         /* TODO: implement it */
                /* TODO: implement it */
-        // Double.valueOf(values[i])
+
         values = infixToPostfix(values);
         int arrayLength = values.length;
         double a;
         double b;
         for (int i = 0; i < arrayLength; i++) {
             switch (values[i]) {
-            case "+":
-                a = doubleStack.pop();
-                b = doubleStack.pop();
-                double c = a + b;
-                doubleStack.push(c);
+                case "+":
+                    a = doubleStack.pop();
+                    b = doubleStack.pop();
+                    double c = a + b;
+                    doubleStack.push(c);
 
-                break;
+                    break;
 
-            case "-":
-                a = doubleStack.pop();
-                b = doubleStack.pop();
-                doubleStack.push(b - a);
-                break;
+                case "-":
+                    a = doubleStack.pop();
+                    b = doubleStack.pop();
+                    doubleStack.push(b - a);
+                    break;
 
-            case "*":
-                a = doubleStack.pop();
-                b = doubleStack.pop();
-                doubleStack.push(a * b);
-                break;
-            case "/":
-                a = doubleStack.pop();
-                b = doubleStack.pop();
-                doubleStack.push(b / a);
-                break;
-            case "":
-                break;
+                case "*":
+                    a = doubleStack.pop();
+                    b = doubleStack.pop();
+                    doubleStack.push(a * b);
+                    break;
+                case "/":
+                    a = doubleStack.pop();
+                    b = doubleStack.pop();
+                    doubleStack.push(b / a);
+                    break;
+                case "":
+                    break;
 
-            default:
-                doubleStack.push(Double.parseDouble(values[i]));
-                break;
+                default:
+                    doubleStack.push(Double.parseDouble(values[i]));
+                    break;
 
             }
         }
@@ -86,38 +86,58 @@ public class SolverExt {
         int n = stringArray.length;
         String str = "";
         String symbol = "";
+        String token;
         for (int i = 0; i < n; i++) {
             switch (stringArray[i]) {
-            case "(":
-                stringStack.push("(");
-                break;
-            case ")":
-                while (symbol != "(" && stringStack.size() != 0) {
-                    symbol = stringStack.pop();
-                    if (symbol != "(") {
-                        str += " " + symbol;
+                case "(":
+                    stringStack.push("(");
+                    break;
+                case ")":
+                    while (symbol != "(" && stringStack.size() != 0) {
+                        symbol = stringStack.pop();
+                        if (symbol != "(") {
+                            str += " " + symbol;
+                        }
                     }
-                }
-                symbol = "";
-                //while ()
-                break;
+                    symbol = "";
+                    break;
 
-            case "+":
-                stringStack.push("+");
-                break;
+                case "+":
+                    if (stringStack.size() != 0) {
 
-            case "*":
-                stringStack.push("*");
-                break;
-            case "-":
-                stringStack.push("-");
-                break;
-            case "/":
-                stringStack.push("/");
-                break;
-            default:
-                str += " " + stringArray[i];
-                break;
+                        do {
+                            token = stringStack.pop();
+                            if (token == "(") break;
+                            str += " " + token;
+
+                        } while (!stringStack.isEmpty());
+                        if (token == "(") stringStack.push(token);
+                    }
+                    stringStack.push("+");
+                    break;
+
+                case "*":
+                    stringStack.push("*");
+                    break;
+                case "-":
+                    if (stringStack.size() != 0) {
+                        do {
+                            token = stringStack.pop();
+                            if (token == "(") break;
+                            str += " " + token;
+
+                        } while (!stringStack.isEmpty());
+                        if (token == "(") stringStack.push(token);
+                    }
+                    stringStack.push("-");
+
+                    break;
+                case "/":
+                    stringStack.push("/");
+                    break;
+                default:
+                    str += " " + stringArray[i];
+                    break;
 
             }
         }
