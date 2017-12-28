@@ -47,9 +47,11 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     @Override
     public Item popFront() {
         /* TODO: implement it */
+        if (head == null) return null;
         Item i = head.item;
         if (head.prev == null) {
             head = tail = null;
+            size--;
             return i;
         }
         head = head.prev;
@@ -60,10 +62,12 @@ public class LinkedDeque<Item> implements IDeque<Item> {
 
     @Override
     public Item popBack() {
+        if (tail == null) return null;
         /* TODO: implement it */
         Item i = tail.item;
         if (tail.next == null) {
             tail = head = null;
+            size--;
             return i;
         }
         tail = tail.next;
@@ -90,15 +94,16 @@ public class LinkedDeque<Item> implements IDeque<Item> {
         /* TODO: implement it */
         return new Iterator<Item>() {
             private Node<Item> currElement = tail;
+
             @Override
             public boolean hasNext() {
 
-                return currElement!=null;
+                return currElement != null;
             }
 
             @Override
             public Item next() {
-                if(currElement == null) throw new NoSuchElementException();
+                if (currElement == null) throw new NoSuchElementException();
                 Item temp = currElement.item;
                 currElement = currElement.next;
                 return temp;

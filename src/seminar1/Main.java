@@ -4,6 +4,8 @@ import com.sun.corba.se.impl.presentation.rmi.IDLTypeException;
 import seminar1.collections.*;
 import seminar1.iterators.IncreasingIterator;
 import seminar1.iterators.MergingIncreasingIterator;
+import seminar1.iterators.MergingPeekingIncreasingIterator;
+import seminar1.iterators.PeekingIncreasingIterator;
 
 import java.util.Iterator;
 
@@ -77,10 +79,24 @@ public class Main {
 
        for(int i  = 0 ;i< 10 ;i++)
             System.out.println(iterator.next());*/
-        IncreasingIterator increasingIterator = new IncreasingIterator(10, 100000000,10);
+       /* IncreasingIterator it1 = new IncreasingIterator(100, Integer.MAX_VALUE/2, 1);
+        IncreasingIterator it2 = new IncreasingIterator(100, Integer.MAX_VALUE/2, 1);*/
 
-        IncreasingIterator increasingIterator2 = new IncreasingIterator(10, 100000000,10);
-        System.out.println("-------");
+        PeekingIncreasingIterator it1 = new PeekingIncreasingIterator(100,Integer.MAX_VALUE/2,1);
+        PeekingIncreasingIterator it2 = new PeekingIncreasingIterator(100,Integer.MAX_VALUE/2,1);
+        PeekingIncreasingIterator it3 = new PeekingIncreasingIterator(100,Integer.MAX_VALUE/2,1);
+        System.out.println("hasNext it1 = true is " + (it1.hasNext() == true));
+        System.out.println("hasNext it2 = true is " + (it2.hasNext() == true));
+        System.out.println("hasNext it3 = true is " + (it3.hasNext() == true));
+        MergingPeekingIncreasingIterator it = new MergingPeekingIncreasingIterator(it1,it2,it3);
+        System.out.println("Здесь должно сейчас вывестить хотя бы три значения");
+        System.out.println("hasNext it = true is " + (it.hasNext() == true));
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+        System.out.println("-- конец вывода -- ");
+
+
 
 
 

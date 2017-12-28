@@ -1,5 +1,7 @@
 package seminar1.iterators;
 
+import seminar1.collections.Heap;
+
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -16,52 +18,39 @@ import java.util.Iterator;
 public class MergingPeekingIncreasingIterator implements Iterator<Integer> {
 
     private Comparator<PeekingIncreasingIterator> comparator = (p1, p2) -> p1.peek().compareTo(p2.peek());
-    int n;
-    int k = 0;
-    int curr = 0;
-    PeekingIncreasingIterator[] array;
-    Integer[] intArray;
+    private int n;
+    private PeekingIncreasingIterator[] array;
+    private IteratorElem[] iteratorElems;
+    private Heap<IteratorElem> heap;
+
+    public MergingPeekingIncreasingIterator() {
+        heap = new Heap<>();
+    }
 
     public MergingPeekingIncreasingIterator(IPeekingIterator... peekingIterator) {
 
         /* TODO: implement it */
         n = peekingIterator.length;
         array = new PeekingIncreasingIterator[n];
-        for (int i = 0; i < n; i++) {
+        iteratorElems = new IteratorElem[n];
+        for (int i = 0; i < n; i++){
             array[i] = (PeekingIncreasingIterator) peekingIterator[i];
-            k += array[i].stepLimit;
+            iteratorElems[i] = new IteratorElem(i);
         }
-        getElems();
-
+        heap = new Heap<>();
     }
 
     @Override
     public boolean hasNext() {
         /* TODO: implement it */
-        return curr < k;
-    }
-
-
-    private void getElems() {
-        intArray = new Integer[k];
-        array[0].peek();
-        for (int i = 0; i < n; i++) {
-            array[i].peek();
-        }
-        int index = 0;
-        for (; index < intArray.length; ) {
-            bubbleSort(array);
-            for (int j = 0; j < array.length; j++) {
-                if (index == k) {
-                    break;
-                }
-                intArray[index] = array[j].peek();
-                index++;
-                array[j].next();
-                array[j].peek();
+        boolean check = false;
+        for (PeekingIncreasingIterator peekingIncreasingIterator : array) {
+            if (peekingIncreasingIterator.hasNext()) {
+                check = true;
+                break;
             }
         }
-        bubbleSort(intArray);
+        return !(heap.isEmpty() && !check);
     }
 
 
@@ -69,32 +58,23 @@ public class MergingPeekingIncreasingIterator implements Iterator<Integer> {
 
     public Integer next() {
         /* TODO: implement it */
-        curr++;
-        return intArray[curr - 1];
-    }
-
-    private void bubbleSort(PeekingIncreasingIterator[] arr) {
-        for (int i = arr.length - 1; i > 0; i--) {
-            for (int j = 0; j < i; j++) {
-                if (comparator.compare(array[j], array[j + 1]) > 0) {
-                    PeekingIncreasingIterator t = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = t;
-                }
+        if (heap.isEmpty()) {
+            for (int i = 0; i < n; i++) {
+                iteratorElems[i].changeValue(array[i].next());
+                heap.insert(iteratorElems[i]);
             }
         }
+        IteratorElem temp = heap.extract();
+        int value = temp.getValue();
+        int iterNumber = temp.getIteratorNumber();
 
-    }
-
-    private void bubbleSort(Integer[] arr) {
-        for (int i = arr.length - 1; i > 0; i--) {
-            for (int j = 0; j < i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    int t = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = t;
-                }
-            }
+        if(array[iterNumber].hasNext()){
+            iteratorElems[iterNumber].changeValue(array[iterNumber].next());
+            heap.insert(iteratorElems[iterNumber]);
         }
+
+        return value;
     }
+
+
 }

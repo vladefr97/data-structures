@@ -1,5 +1,7 @@
 package seminar1.iterators;
 
+import seminar1.collections.Heap;
+
 import java.util.Iterator;
 
 /**
@@ -13,70 +15,77 @@ import java.util.Iterator;
  */
 public class MergingIncreasingIterator implements Iterator<Integer> {
 
+
     private IncreasingIterator first;
     private IncreasingIterator second;
-    int a , b;
-    boolean check = true;
+    private IteratorElem[] iteratorElems;
+    private Heap<IteratorElem> heap;
+
     //private int step;
+    public MergingIncreasingIterator() {
+        heap = new Heap<>();
+    }
 
 
     public MergingIncreasingIterator(IncreasingIterator first, IncreasingIterator second) {
         this.first = first;
         this.second = second;
-        a = first.next();
-        b = second.next();
-
-
+        iteratorElems = new IteratorElem[2];
+        iteratorElems[0] = new IteratorElem(0);
+        iteratorElems[1] = new IteratorElem(1);
+        heap = new Heap<>();
         /* TODO: implement it */
     }
+
 
     @Override
     public boolean hasNext() {
 
         /* TODO: implement it */
-        return first.hasNext() || second.hasNext();
-    }
 
+        return !(heap.isEmpty() && !first.hasNext() && !second.hasNext());
+    }
 
 
     @Override
     public Integer next() {
-        int temp;
-        if (check) {
-            if (a < b) {
-                temp = a;
-                a = first.next();
 
-            } else {
-                temp = b;
-                b = second.next();
-            }
-            check = false;
-            return temp;
+        if(heap.isEmpty()){
+            iteratorElems[0].changeValue(first.next());
+            iteratorElems[1].changeValue(second.next());
+            heap.insert(iteratorElems[0]);
+            heap.insert(iteratorElems[1]);
         }
-        if (first.hasNext() && second.hasNext()) {
 
-            if (a < b) {
-                temp = a;
-                a = first.next();
+        IteratorElem temp = heap.extract();
+        int value = temp.getValue();
+        int iterNumber  = temp.getIteratorNumber();
 
-            } else {
-                temp = b;
-                b = second.next();
+        switch (iterNumber){
+            case 0:
+                if(first.hasNext()) {
+                    iteratorElems[0].changeValue(first.next());
+                    heap.insert(iteratorElems[0]);
+                }
+                break;
+            case 1:
+                if(second.hasNext()){
+                    iteratorElems[1].changeValue(second.next());
+                    heap.insert(iteratorElems[1]);
 
-            }
-            return temp;
-
-        } else {
-            if (first.hasNext()) return first.next();
-            else return second.next();
+                }
+                break;
         }
+        return value;
 
     }
+
+
+}
 
 
 
         /* TODO: implement it */
 
 
-}
+
